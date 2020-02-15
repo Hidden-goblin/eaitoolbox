@@ -148,7 +148,8 @@ def main():
     behave_main(behave_arguments)  # Run behave with the CLI arguments
 
     if generate_report:
-        ExportUtilities.create_application_documentation(
+        export = ExportUtilities(feature_repository="features")
+        export.create_application_documentation(
             report_file="plain/{}-output.txt".format(timestamp))
 
     if open_allure_report:
