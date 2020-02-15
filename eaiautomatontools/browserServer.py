@@ -7,16 +7,16 @@ import tempfile
 from shutil import rmtree
 from datetime import datetime
 from selenium import webdriver
-from automatontools.navigators import go_to_url, enter_frame, go_to_window
-from automatontools.finders import find_element, find_elements, find_from_elements, \
+from eaiautomatontools.navigators import go_to_url, enter_frame, go_to_window
+from eaiautomatontools.finders import find_element, find_elements, find_from_elements, \
     find_sub_element_from_element
-from automatontools.actions import fill_element, fill_elements, select_in_dropdown, set_checkbox, \
+from eaiautomatontools.actions import fill_element, fill_elements, select_in_dropdown, set_checkbox, \
     click_element, select_in_angular_dropdown, hover_element, select_in_elements
-from automatontools.alerts import alert_message, intercept_alert
-from automatontools.information import is_alert_present, is_field_exist, is_field_contains_text, \
+from eaiautomatontools.alerts import alert_message, intercept_alert
+from eaiautomatontools.information import is_alert_present, is_field_exist, is_field_contains_text, \
     element_text, is_field_displayed, is_field_enabled, how_many_windows, where_am_i, \
     is_checkbox_checked
-from automatontools.drivers_tools import fullpage_screenshot
+from eaiautomatontools.drivers_tools import fullpage_screenshot
 
 log = logging.getLogger(__name__)
 

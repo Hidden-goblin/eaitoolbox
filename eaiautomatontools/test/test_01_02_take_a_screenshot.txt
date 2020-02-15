@@ -10,7 +10,7 @@ Initialise browserServer & resources server
 -----------------------
 Use the python resources server.
 
-    >>> from automatontools.resources.server import TestServer
+    >>> from eaiautomatontools.resources.server import TestServer
 
     >>> myserver = TestServer()
 
@@ -18,7 +18,7 @@ Use the python resources server.
 
 Instantiate a web driver using the automatontools.browserServer
 
-    >>> from automatontools.browserServer import BrowserServer
+    >>> from eaiautomatontools.browserServer import BrowserServer
 
     >>> myBrowser = BrowserServer()
 

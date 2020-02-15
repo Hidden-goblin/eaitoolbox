@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from automatontools.finders import find_element
-from automatontools.drivers_tools import web_drivers_tuple
+from eaiautomatontools.finders import find_element
+from eaiautomatontools.drivers_tools import web_drivers_tuple
 """
-The automatontools.navigators tool box purpose is to provide some limited but heavy used methods
+The eaiautomatontools.navigators tool box purpose is to provide some limited but heavy used methods
 in order to browse to URL and navigate from browser tabs or windows.
 
 The behaviour of these methods are known so that it will ease the debugging.

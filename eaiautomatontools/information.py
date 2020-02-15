@@ -4,8 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from automatontools.drivers_tools import web_drivers_tuple
-from automatontools.finders import find_element
+from eaiautomatontools.drivers_tools import web_drivers_tuple
+from eaiautomatontools.finders import find_element
 
 
 def is_field_exist(driver=None, field=None, until=5):

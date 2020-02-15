@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
 from time import sleep
-from automatontools.finders import find_element, find_from_elements, find_sub_element_from_element
-from automatontools.information import is_field_exist, is_field_displayed
-from automatontools.drivers_tools import web_drivers_tuple
+from eaiautomatontools.finders import find_element, find_from_elements, find_sub_element_from_element
+from eaiautomatontools.information import is_field_exist, is_field_displayed
+from eaiautomatontools.drivers_tools import web_drivers_tuple
 from selenium.common.exceptions import InvalidElementStateException, NoSuchElementException, \
     StaleElementReferenceException
 from selenium.webdriver.support.select import Select
@@ -154,6 +154,7 @@ def select_in_angular_dropdown(driver=None, root_field=None, visible_text: str =
         if root_field is not None:
             click_element(driver=driver, field=root_field)
             sleep(0.1)
+
         if is_field_exist(driver=driver, field={"type": "tag_name", "value": "mat-option"}):
             element = find_from_elements(driver=driver,
                                          field={"type": "tag_name", "value": "mat-option"},

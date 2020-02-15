@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from automatontools.drivers_tools import web_drivers_tuple
+from eaiautomatontools.drivers_tools import web_drivers_tuple
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.action_chains import ActionChains

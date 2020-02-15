@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from selenium.common.exceptions import ElementNotSelectableException, NoAlertPresentException
-from automatontools.drivers_tools import web_drivers_tuple
+from eaiautomatontools.drivers_tools import web_drivers_tuple
 
 
 def intercept_alert(driver=None, messages=None, accept=True, value=None):
