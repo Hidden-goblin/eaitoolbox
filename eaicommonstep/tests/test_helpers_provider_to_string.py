@@ -1,4 +1,4 @@
-from commonstep.helpers import provider_to_string
+from eaicommonstep.helpers import provider_to_string
 
 
 class TestHelpersProviderToString:

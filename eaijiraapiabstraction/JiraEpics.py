@@ -1,4 +1,4 @@
-from jiraapiabstraction.JiraIssues import JiraIssue
+from eaijiraapiabstraction.JiraIssues import JiraIssue
 
 
 class JiraEpics:

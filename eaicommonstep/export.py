@@ -3,8 +3,8 @@ import glob
 import os
 import datetime
 import subprocess
-from jiraapiabstraction.JiraConnection import JiraConnection
-from reporter.CucumberJson import CucumberCleaner
+from eaijiraapiabstraction.JiraConnection import JiraConnection
+from eaireporter.CucumberJson import CucumberCleaner
 import logging
 import json
 

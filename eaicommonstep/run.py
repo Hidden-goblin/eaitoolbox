@@ -5,7 +5,7 @@ import sys
 import os
 import time
 import logging
-from reporter.FeatureReporter import ExportUtilities
+from eaireporter.FeatureReporter import ExportUtilities
 
 
 def main():

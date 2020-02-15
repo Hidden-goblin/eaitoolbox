@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from jiraapiabstraction.JiraConnection import JiraConnection
+from eaijiraapiabstraction.JiraConnection import JiraConnection
 
 
 class ReleaseReporter:

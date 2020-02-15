@@ -1,7 +1,7 @@
 import requests
 import logging
 from os.path import join
-from jiraapiabstraction.JiraIssues import JiraIssue
+from eaijiraapiabstraction.JiraIssues import JiraIssue
 
 
 class JiraAttachments:

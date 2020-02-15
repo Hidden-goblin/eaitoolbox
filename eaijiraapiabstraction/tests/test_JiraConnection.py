@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock, patch
-from jiraapiabstraction.JiraConnection import JiraConnection
+from eaijiraapiabstraction.JiraConnection import JiraConnection
 
 
 class TestJiraConnection:

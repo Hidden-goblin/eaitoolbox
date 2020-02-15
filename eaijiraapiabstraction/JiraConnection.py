@@ -4,13 +4,13 @@ import logging
 
 import requests
 
-from jiraapiabstraction.JiraAttachments import JiraAttachments
-from jiraapiabstraction.JiraEpics import JiraEpics
-from jiraapiabstraction.JiraIssues import JiraIssue
-from jiraapiabstraction.JiraReporter import JiraReporter
-from jiraapiabstraction.JiraStories import JiraStories
-from jiraapiabstraction.JiraTests import JiraTests
-from jiraapiabstraction.XRayIssues import XRayIssues
+from eaijiraapiabstraction.JiraAttachments import JiraAttachments
+from eaijiraapiabstraction.JiraEpics import JiraEpics
+from eaijiraapiabstraction.JiraIssues import JiraIssue
+from eaijiraapiabstraction.JiraReporter import JiraReporter
+from eaijiraapiabstraction.JiraStories import JiraStories
+from eaijiraapiabstraction.JiraTests import JiraTests
+from eaijiraapiabstraction.XRayIssues import XRayIssues
 
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)

@@ -1,5 +1,5 @@
-from commonstep.helpers import my_path
 import pytest
+from eaicommonstep.helpers import my_path
 
 
 class TestHelperMyPath:

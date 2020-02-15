@@ -5,8 +5,8 @@ import re
 import argparse
 import dpath.util
 from behave.parser import parse_file
-from jiraapiabstraction.JiraConnection import JiraConnection
-from jiraapiabstraction.JiraIssues import JiraIssue
+from eaijiraapiabstraction.JiraConnection import JiraConnection
+from eaijiraapiabstraction.JiraIssues import JiraIssue
 
 my_format = "%(asctime)s -- %(filename)s.%(funcName)s-- %(levelname)s -- %(message)s"
 # my_format = "%(levelname)s -- %(message)s"  # use for debug
@@ -342,7 +342,7 @@ class UpdateFeatureOnJira:
                             remove = list(set(jira_value) - set(value))  # tags to delete
                             value = {"add": add,
                                      "remove": remove}
-                            log.debug("list of labels to add and remove: ".format(value))
+                            log.debug("list of labels to add and remove: {} ".format(value))
 
                         log.debug('#feature {}: {}\n\t#jira {}: {}'.format(type(value), value,
                                                                            type(jira_value),

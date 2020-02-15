@@ -5,8 +5,8 @@ import os.path
 import requests
 from json import load
 
-from jiraapiabstraction.JiraAttachments import JiraAttachments
-from jiraapiabstraction.JiraTests import JiraTests
+from eaijiraapiabstraction.JiraAttachments import JiraAttachments
+from eaijiraapiabstraction.JiraTests import JiraTests
 
 log = logging.getLogger(__name__)
 

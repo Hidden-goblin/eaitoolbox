@@ -5,10 +5,10 @@ from shutil import rmtree
 
 import xlsxwriter
 
-from jiraapiabstraction.JiraAttachments import JiraAttachments
-from jiraapiabstraction.JiraIssues import JiraIssue
-from jiraapiabstraction.JiraTests import JiraTests
-from jiraapiabstraction.XRayIssues import XRayIssues
+from eaijiraapiabstraction.JiraAttachments import JiraAttachments
+from eaijiraapiabstraction.JiraIssues import JiraIssue
+from eaijiraapiabstraction.JiraTests import JiraTests
+from eaijiraapiabstraction.XRayIssues import XRayIssues
 
 log = logging.getLogger(__name__)
 

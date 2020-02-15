@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from reporter.FeatureReporter import ExportUtilities
+from eaireporter.FeatureReporter import ExportUtilities
 
 
 class TestFeatureReporter:

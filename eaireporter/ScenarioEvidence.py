@@ -5,7 +5,7 @@ import glob
 import os
 import logging
 from docx.shared import Pt
-from reporter.FeatureReporter import ExportUtilities
+from eaireporter.FeatureReporter import ExportUtilities
 
 log = logging.getLogger(__name__)
 
