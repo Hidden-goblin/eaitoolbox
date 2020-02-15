@@ -10,15 +10,15 @@ Launch a test web server serving controlled web pages on localhost port 8081
 
 Use the python resources server.
 
-    >>> from automatontools.resources.server import TestServer
+    >>> from eaiautomatontools.resources.server import TestServer
 
     >>> myserver = TestServer()
 
     >>> myserver.start()
 
-Instantiate a web driver using the automatontools.browserServer
+Instantiate a web driver using the eaiautomatontools.browserServer
 
-    >>> from automatontools.browserServer import BrowserServer
+    >>> from eaiautomatontools.browserServer import BrowserServer
 
     >>> myWebDriver = BrowserServer()
 
@@ -36,13 +36,13 @@ Open the form test page
     0
 
 Import the fill field tool
-    >>> from automatontools.actions import click_element
+    >>> from eaiautomatontools.actions import click_element
 
 Import the information tool
-    >>> from automatontools.information import is_alert_present
+    >>> from eaiautomatontools.information import is_alert_present
 
 Import the alert tool
-    >>> from automatontools.alerts import intercept_alert
+    >>> from eaiautomatontools.alerts import intercept_alert
 
 Nominal case: give a web driver
 ------------------------------------

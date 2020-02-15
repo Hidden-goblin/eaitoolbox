@@ -9,7 +9,7 @@ The constructor will set default attributes. At this stage the browserServer won
 
 Create a browserServer
 -----------------------
-    >>> from automatontools.browserServer import BrowserServer
+    >>> from eaiautomatontools.browserServer import BrowserServer
 
     >>> myBrowser = BrowserServer()
 

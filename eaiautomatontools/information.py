@@ -96,7 +96,7 @@ def element_text(driver=None, field=None):
     Return the text of the element
     :param driver: a selenium web driver
     :param field: a dictionary
-    :raise AssertionError: from automatontools.finders.find_element method
+    :raise AssertionError: from eaiautomatontools.finders.find_element method
     :raise Exception: if text and value are defined but not identical
     :return: the element text or value, empty if no text or value
     """

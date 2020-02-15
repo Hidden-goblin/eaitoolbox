@@ -7,7 +7,7 @@ This document will only present the assertion behaviour on the driver for naviga
 Background
 ------------------------
 Import the navigators utilities
-    >>> from automatontools.navigators import go_to_window, go_to_url, enter_frame
+    >>> from eaiautomatontools.navigators import go_to_window, go_to_url, enter_frame
 
 Assertion on go_to_window
 -------------------------

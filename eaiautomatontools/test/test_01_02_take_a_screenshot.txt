@@ -16,7 +16,7 @@ Use the python resources server.
 
     >>> myserver.start()
 
-Instantiate a web driver using the automatontools.browserServer
+Instantiate a web driver using the eaiautomatontools.browserServer
 
     >>> from eaiautomatontools.browserServer import BrowserServer
 

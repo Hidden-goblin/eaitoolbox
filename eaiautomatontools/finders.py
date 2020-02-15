@@ -108,8 +108,8 @@ def find_from_elements(driver=None, field=None, text=None):
     :param driver: a selenium web driver
     :param field: a dictionary
     :param text: a string
-    :raise AssertionError: from the automatontools.finders.find_elements method
-    :raise KeyError: from the automatontools.finders.find_elements method
+    :raise AssertionError: from the eaiautomatontools.finders.find_elements method
+    :raise KeyError: from the eaiautomatontools.finders.find_elements method
     :raise NoSuchElementException: when no element is found
     :return: a selenium web element
     """

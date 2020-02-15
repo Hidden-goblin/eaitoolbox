@@ -10,15 +10,15 @@ Launch a test web server serving controlled web pages on localhost port 8081
 
 Use the python resources server.
 
-    >>> from automatontools.resources.server import TestServer
+    >>> from eaiautomatontools.resources.server import TestServer
 
     >>> myserver = TestServer()
 
     >>> myserver.start()
 
-Instantiate a web driver using the automatontools.browserServer
+Instantiate a web driver using the eaiautomatontools.browserServer
 
-    >>> from automatontools.browserServer import BrowserServer
+    >>> from eaiautomatontools.browserServer import BrowserServer
 
     >>> myWebDriver = BrowserServer()
 
@@ -36,10 +36,10 @@ Open the form test page
     0
 
 Import the find_element tool
-    >>> from automatontools.finders import find_element
+    >>> from eaiautomatontools.finders import find_element
 
 Import the fill_element tool
-    >>> from automatontools.actions import fill_element
+    >>> from eaiautomatontools.actions import fill_element
 
 
 
@@ -104,7 +104,7 @@ The element can't be found
     >>> fill_element(driver=myWebDriver.get(), field={"type":"id", "value":"lab-nam"},value="my name")
     Traceback (most recent call last):
     ...
-    Exception: automatontools.actions.fill_element raised an exception. Exception is 'Element designed by field '{'type': 'id', 'value': 'lab-nam'}' could not be located.'
+    Exception: eaiautomatontools.actions.fill_element raised an exception. Exception is 'Element designed by field '{'type': 'id', 'value': 'lab-nam'}' could not be located.'
 
 Teardown
 ------------------------------

@@ -9,15 +9,15 @@ Launch a test web server serving controlled web pages on localhost port 8081
 
 Use the python resources server.
 
-    >>> from automatontools.resources.server import TestServer
+    >>> from eaiautomatontools.resources.server import TestServer
 
     >>> myserver = TestServer()
 
     >>> myserver.start()
 
-Instantiate a web driver using the automatontools.browserServer
+Instantiate a web driver using the eaiautomatontools.browserServer
 
-    >>> from automatontools.browserServer import BrowserServer
+    >>> from eaiautomatontools.browserServer import BrowserServer
 
     >>> myWebDriver = BrowserServer()
 
@@ -37,7 +37,7 @@ Request the web server IP 127.0.0.1:8081
 
 Find an element
 --------------------------
-    >>> from automatontools.finders import find_elements
+    >>> from eaiautomatontools.finders import find_elements
 
 1- Find by id
     >>> myElements = find_elements(driver=myWebDriver.get(), field={"type":"id","value":"first"})

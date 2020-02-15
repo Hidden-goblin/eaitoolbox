@@ -11,15 +11,15 @@ Launch a test web server serving controlled web pages on localhost port 8081
 
 Use the python resources server.
 
-    >>> from automatontools.resources.server import TestServer
+    >>> from eaiautomatontools.resources.server import TestServer
 
     >>> myserver = TestServer()
 
     >>> myserver.start()
 
-Instantiate a web driver using the automatontools.browserServer
+Instantiate a web driver using the eaiautomatontools.browserServer
 
-    >>> from automatontools.browserServer import BrowserServer
+    >>> from eaiautomatontools.browserServer import BrowserServer
 
     >>> myWebDriver = BrowserServer()
 
@@ -37,10 +37,10 @@ Open the form test page
     0
 
 Import the find_element tool
-    >>> from automatontools.finders import find_element
+    >>> from eaiautomatontools.finders import find_element
 
 Import the fill_element tool
-    >>> from automatontools.actions import fill_elements
+    >>> from eaiautomatontools.actions import fill_elements
 
 
 
@@ -70,7 +70,7 @@ Exceptions
     >>> fill_elements(driver=myWebDriver.get(), fields={"username":{"type":"id","value":"uname"}, "email":{"type":"id","value":"email"}},data={"username":"my name","email":"my.email@test.com"})
     Traceback (most recent call last):
     ...
-    Exception: automatontools.actions.fill_element raised an exception. Exception is 'Element designed by field '{'type': 'id', 'value': 'uname'}' could not be located.'
+    Exception: eaiautomatontools.actions.fill_element raised an exception. Exception is 'Element designed by field '{'type': 'id', 'value': 'uname'}' could not be located.'
 
 2- One field isn't user-editable
     >>> fill_elements(driver=myWebDriver.get(), fields={"username":{"type":"id","value":"lab-name"}, "email":{"type":"id","value":"email"}},data={"username":"my name","email":"my.email@test.com"})

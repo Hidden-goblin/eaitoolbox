@@ -10,15 +10,15 @@ Launch a test web server serving controlled web pages on localhost port 8081
 
 Use the python resources server.
 
-    >>> from automatontools.resources.server import TestServer
+    >>> from eaiautomatontools.resources.server import TestServer
 
     >>> myserver = TestServer()
 
     >>> myserver.start()
 
-Instantiate a web driver using the automatontools.browserServer
+Instantiate a web driver using the eaiautomatontools.browserServer
 
-    >>> from automatontools.browserServer import BrowserServer
+    >>> from eaiautomatontools.browserServer import BrowserServer
 
     >>> myWebDriver = BrowserServer()
 
@@ -36,7 +36,7 @@ Request the test page resources/popups.html
     0
 
 Use the finders tools in order to retrieve link elements within the page
-    >>> from automatontools.finders import find_from_elements, find_element
+    >>> from eaiautomatontools.finders import find_from_elements, find_element
 
 
 Switch to window
@@ -44,7 +44,7 @@ Switch to window
 ------------------------------
 
 Use the navigators tools
-    >>> from automatontools.navigators import go_to_window
+    >>> from eaiautomatontools.navigators import go_to_window
 
 Can't switch to window with the same page title
 ------------------------------
