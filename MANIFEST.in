@@ -1,0 +1,6 @@
+include eaijiraapiabstraction/tests/*
+include eaiautomatontools/test/*.txt
+recursive-include eaiautomatontools/resources *js *py *css *html
+recursive-include eaiautomatontools/webdrivers *.json *.exe
+include setup.cfg
+include run.py
