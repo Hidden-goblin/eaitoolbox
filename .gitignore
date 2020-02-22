@@ -1,4 +1,8 @@
 /venv/*
-/.vscode/*
+.vscode
 *.DS_Store
 *venv
+*__pycache__
+eaiautomatontools/dist
+eaiautomatontools/build
+*.egg-info
