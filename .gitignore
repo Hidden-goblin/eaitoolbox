@@ -3,6 +3,6 @@
 *.DS_Store
 *venv
 *__pycache__
-eaiautomatontools/dist
-eaiautomatontools/build
-*.egg-info
+**/dist
+**/build
+**/*.egg-info
