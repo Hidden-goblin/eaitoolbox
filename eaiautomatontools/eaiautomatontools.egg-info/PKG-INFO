@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: eaiautomatontools
+Version: 1.0.0
+Summary: UI utilities in order to abstract selenium commands
+Home-page: UNKNOWN
+Author: Eric Aïvayan
+Author-email: eric.aivayan@free.fr
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Programming Language :: Python :: 3.7

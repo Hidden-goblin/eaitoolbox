@@ -1,0 +1,2 @@
+selenium~=3.14
+Pillow>=6.0.0
