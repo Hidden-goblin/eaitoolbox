@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from automatontools.drivers_tools import web_drivers_tuple
+from drivers_tools import web_drivers_tuple
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.action_chains import ActionChains
@@ -46,7 +46,7 @@ def find_element(driver=None, field=None):
         actions.perform()
         return element
     except AssertionError as assertion:
-        log.error("automatontools.finders.find_element raised an assertion with following input"
+        log.error("finders.find_element raised an assertion with following input"
                   " driver:'{}' and field:'{}'. Assertion is '{}'".format(driver,
                                                                           field,
                                                                           assertion.args))
@@ -92,7 +92,7 @@ def find_elements(driver=None, field=None):
         }
         return switcher[field["type"]](field["value"])
     except AssertionError as assertion:
-        log.error("automatontools.finders.find_elements raised an assertion with following input"
+        log.error("finders.find_elements raised an assertion with following input"
                   " driver:'{}', field:'{}'. Assertion is '{}'".format(driver, field,
                                                                        assertion.args))
         raise
@@ -108,8 +108,8 @@ def find_from_elements(driver=None, field=None, text=None):
     :param driver: a selenium web driver
     :param field: a dictionary
     :param text: a string
-    :raise AssertionError: from the eaiautomatontools.finders.find_elements method
-    :raise KeyError: from the eaiautomatontools.finders.find_elements method
+    :raise AssertionError: from the eaifinders.find_elements method
+    :raise KeyError: from the eaifinders.find_elements method
     :raise NoSuchElementException: when no element is found
     :return: a selenium web element
     """
@@ -166,7 +166,7 @@ def find_sub_element_from_element(web_element=None, field=None):
         actions.perform()
         return element
     except AssertionError as assertion:
-        log.error("automatontools.finders.find_sub_element_from_element raised an assertion with"
+        log.error("finders.find_sub_element_from_element raised an assertion with"
                   " following input\n web_element:'{}', field:'{}'. "
                   "Assertion is '{}'".format(web_element, field, assertion.args))
         raise

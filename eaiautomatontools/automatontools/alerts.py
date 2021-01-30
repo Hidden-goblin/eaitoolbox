@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from selenium.common.exceptions import ElementNotSelectableException, NoAlertPresentException
-from automatontools.drivers_tools import web_drivers_tuple
+from drivers_tools import web_drivers_tuple
 
 
 def intercept_alert(driver=None, messages=None, accept=True, value=None):
@@ -45,19 +45,19 @@ def intercept_alert(driver=None, messages=None, accept=True, value=None):
 
         return 0
     except AssertionError as assertion:
-        logging.error("automatontools.alerts.intercept_alert raised an assertion with following"
+        logging.error("alerts.intercept_alert raised an assertion with following"
                       " input driver:'{}', message:'{}' and accept:'{}'."
                       " Assertion is '{}'".format(driver, messages, accept, assertion.args))
         raise
     except ElementNotSelectableException as not_selectable:
-        logging.error("automatontools.alerts.intercept_alert can't fill the alert popup with '{}'"
+        logging.error("alerts.intercept_alert can't fill the alert popup with '{}'"
                       " as there is no input field.\nGet {}".format(value, not_selectable.args))
         raise ElementNotSelectableException(
             "Can't fill the alert popup with '{}' as there is no "
             "input field.".format(value)) from None
     except NoAlertPresentException as no_alert:
         logging.error(
-            "automatontools.alerts.intercept_alert can't interact with an alert as there is no "
+            "alerts.intercept_alert can't interact with an alert as there is no "
             "displayed alert.\nGet {}".format(no_alert.args))
         raise NoAlertPresentException("Can't interact with an alert as there is no "
                                       "displayed alert") from None
@@ -77,11 +77,11 @@ def alert_message(driver=None):
 
         return alert_object.text
     except AssertionError as assertion:
-        logging.error("automatontools.alerts.alert_message raised an assertion with following input"
+        logging.error("alerts.alert_message raised an assertion with following input"
                       " driver:'{}'. Assertion is '{}'".format(driver, assertion.args))
         raise
     except NoAlertPresentException as no_alert:
-        logging.error("automatontools.alerts.intercept_alert can't interact with an alert as there"
+        logging.error("alerts.intercept_alert can't interact with an alert as there"
                       " is no displayed alert.\nGet {}".format(no_alert.args))
         raise NoAlertPresentException("Can't interact with an alert as there is no"
                                       " displayed alert") from None

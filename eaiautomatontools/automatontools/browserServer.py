@@ -7,16 +7,19 @@ import tempfile
 from shutil import rmtree
 from datetime import datetime
 from selenium import webdriver
-from automatontools.navigators import go_to_url, enter_frame, go_to_window
-from automatontools.finders import find_element, find_elements, find_from_elements, \
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from navigators import go_to_url, enter_frame, go_to_window
+from finders import find_element, find_elements, find_from_elements, \
     find_sub_element_from_element
-from automatontools.actions import fill_element, fill_elements, select_in_dropdown, set_checkbox, \
+from actions import fill_element, fill_elements, select_in_dropdown, set_checkbox, \
     click_element, select_in_angular_dropdown, hover_element, select_in_elements
-from automatontools.alerts import alert_message, intercept_alert
-from automatontools.information import is_alert_present, is_field_exist, is_field_contains_text, \
+from alerts import alert_message, intercept_alert
+from information import is_alert_present, is_field_exist, is_field_contains_text, \
     element_text, is_field_displayed, is_field_enabled, how_many_windows, where_am_i, \
     is_checkbox_checked
-from automatontools.drivers_tools import fullpage_screenshot
+from drivers_tools import fullpage_screenshot
 
 log = logging.getLogger(__name__)
 
@@ -142,6 +145,18 @@ class BrowserServer:
         }
 
     @staticmethod
+    def __webdriver_switcher():
+        """
+
+        :return:
+        """
+        return {
+            "chrome": ChromeDriverManager,
+            "firefox": GeckoDriverManager,
+            "edge": EdgeChromiumDriverManager
+        }
+
+    @staticmethod
     def __serve_time():
         datetime_object = datetime.now()
         return int(datetime_object.timestamp() * 1000000)
@@ -162,7 +177,8 @@ class BrowserServer:
                 raise FileNotFoundError("{} is not a valid file.".format(webdriver_path))
 
             self.webdriver = \
-                self.__driver_switcher()[self.browser_type["name"]](executable_path=webdriver_path)
+                self.__driver_switcher()[self.browser_type["name"]](
+                    executable_path=self.__webdriver_switcher()[self.browser_type["name"]]().install())
             self.__launched = True
         else:
             log.exception("Browser type not defined. Received browser:'{}', version:'{}' Expected "
@@ -348,3 +364,4 @@ class BrowserServer:
     # TODO add unit test
     def is_checkbox_checked(self, field=None, is_angular=False):
         return is_checkbox_checked(driver=self.webdriver, field=field, is_angular=is_angular)
+

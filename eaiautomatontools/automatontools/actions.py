@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
 from time import sleep
-from automatontools.finders import find_element, find_from_elements, find_sub_element_from_element
-from automatontools.information import is_field_exist, is_field_displayed
-from automatontools.drivers_tools import web_drivers_tuple
+from finders import find_element, find_from_elements, find_sub_element_from_element
+from information import is_field_exist, is_field_displayed
+from drivers_tools import web_drivers_tuple
 from selenium.common.exceptions import InvalidElementStateException, NoSuchElementException, \
     StaleElementReferenceException
 from selenium.webdriver.support.select import Select
@@ -54,7 +54,7 @@ def fill_elements(driver=None, fields=None, data=None):
 
         return 0
     except AssertionError as assertion:
-        log.error("automatontools.actions.fill_elements raised an assertion with following"
+        log.error("actions.fill_elements raised an assertion with following"
                   " input driver:'{}', fields:'{}' and data:'{}'."
                   " Assertion is '{}'".format(driver, fields, data, assertion.args))
         raise
@@ -90,7 +90,7 @@ def fill_element(driver=None, field=None, value=None):
             elem.send_keys(number_of_backspace_hit * Keys.BACKSPACE)
         return 0
     except AssertionError as assertion:
-        log.error("automatontools.actions.fill_element raised an assertion with following"
+        log.error("actions.fill_element raised an assertion with following"
                   " input driver:'{}', field:'{}' and value:'{}'."
                   " Assertion is '{}'".format(driver, field, value, assertion.args))
         raise
@@ -101,10 +101,10 @@ def fill_element(driver=None, field=None, value=None):
             "Element '{}' must be user-editable".format(field)) from None
     except Exception as exception:
         logging.error(
-            "automatontools.actions.fill_element raised an exception. Exception is '{}'".format(
+            "actions.fill_element raised an exception. Exception is '{}'".format(
                 exception.args))
         raise Exception(
-            "automatontools.actions.fill_element raised an exception. Exception is '{}'".format(
+            "actions.fill_element raised an exception. Exception is '{}'".format(
                 exception.args[0])) from None
 
 

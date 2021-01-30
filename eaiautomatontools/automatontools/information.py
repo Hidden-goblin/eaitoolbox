@@ -4,8 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from automatontools.drivers_tools import web_drivers_tuple
-from automatontools.finders import find_element
+from drivers_tools import web_drivers_tuple
+from finders import find_element
 
 
 def is_field_exist(driver=None, field=None, until=5):
@@ -34,12 +34,12 @@ def is_field_exist(driver=None, field=None, until=5):
         return WebDriverWait(driver, until).until(
             EC.presence_of_element_located((switcher[field["type"]], field["value"])))
     except AssertionError as assertion:
-        logging.error("automatontools.information.is_field_exist raised an assertion with following"
+        logging.error("information.is_field_exist raised an assertion with following"
                       " input driver:'{}', field:'{}' and until:'{}'. "
                       "Assertion is '{}'".format(driver, field, until, assertion.args))
         raise
     except TimeoutException:
-        logging.warning("""automatontools.information.is_field_exist raised a TimeoutException for
+        logging.warning("""information.is_field_exist raised a TimeoutException for
          the following field '{}' """.format(field))
         return None
 
@@ -65,7 +65,7 @@ def is_field_contains_text(driver=None, field=None, text=None):
         else:
             return False
     except AssertionError as assertion:
-        logging.error("automatontools.information.is_field_exist raised an assertion with "
+        logging.error("information.is_field_exist raised an assertion with "
                       "following input driver:'{}', field:'{}' and text:'{}'. "
                       "Assertion is '{}'".format(driver, field, text, assertion.args))
         raise
@@ -83,7 +83,7 @@ def is_alert_present(driver=None, until=5):
         if WebDriverWait(driver, until).until(EC.alert_is_present()):
             return True
     except AssertionError as assertion:
-        logging.error("automatontools.information.is_alert-present raised an assertion with "
+        logging.error("information.is_alert-present raised an assertion with "
                       "following input driver:'{}' and until:'{}'. "
                       "Assertion is '{}'".format(driver, until, assertion.args))
         raise
@@ -96,7 +96,7 @@ def element_text(driver=None, field=None):
     Return the text of the element
     :param driver: a selenium web driver
     :param field: a dictionary
-    :raise AssertionError: from eaiautomatontools.finders.find_element method
+    :raise AssertionError: from eaifinders.find_element method
     :raise Exception: if text and value are defined but not identical
     :return: the element text or value, empty if no text or value
     """
@@ -130,7 +130,7 @@ def how_many_windows(driver=None):
             "Driver is expected."
         return len(driver.window_handles)
     except AssertionError as assertion:
-        logging.error("automatontools.information.is_alert-present raised an assertion with "
+        logging.error("information.is_alert-present raised an assertion with "
                       "following input driver:'{}'. "
                       "Assertion is '{}'".format(driver, assertion.args))
         raise
