@@ -1,14 +1,135 @@
 # -*- coding: utf-8 -*-
+# -*- Product under GNU GPL v3 -*-
 import re
 import glob
 import logging
 import argparse
+import os
+import sys
 
 from pathlib import Path
+from PIL import ImageTk, Image
 from behave.parser import parse_file
 from docx import Document
+import tkinter as tk
+from tkinter import filedialog, Toplevel
 
 log = logging.getLogger(__name__)
+
+
+class Application:
+    def __init__(self):
+        self.__assets = os.path.realpath(f"{os.path.dirname(os.path.realpath(__file__))}/..")
+        self.__master = tk.Tk()
+        self.__master.geometry("500x200")
+        self.__repository_label = None
+        self.__repository_label_text = "None Selected"
+        self.__repository_select_button = None
+        self.__repository_location = None
+        valid = Image.open(f"{self.__assets}/assets/valid.png")
+        valid = valid.resize((20,20), Image.ANTIALIAS)
+        self.__picture_valid = ImageTk.PhotoImage(valid)
+        warning = Image.open(f"{self.__assets}/assets/warning.png")
+        warning = warning.resize((20,20), Image.ANTIALIAS)
+        self.__picture_warning = ImageTk.PhotoImage(warning)
+        self.__document_name_label = tk.Label(self.__master,
+                                              text="Document name: ")
+        self.__document_filename_label = tk.Label(self.__master,
+                                                 text="Document filname: ")
+        self.__us_tag_label = tk.Label(self.__master,
+                                       text="US Tag: ")
+        self.__execution_result_label = tk.Label(self.__master,
+                                                 text="Execution results location: ")
+        self.__quit = None
+        self.__readme_button = None
+        self.__execute_button = None
+        self.__reporter = ExportUtilities()
+        self.create_widgets()
+
+        # Icon by <a href="https://freeicons.io/profile/714">Raj Dev</a> on <a href="https://freeicons.io">freeicons.io</a>
+
+
+
+    def create_widgets(self):
+        # Legal stuff
+        self.__legal_label = tk.Label(self.__master, text="?", )
+        self.__legal_label.grid(row=0, column=3)
+        self.__legal_label.bind("<Button-1>", self.__display_legal)
+        # Repository
+        self.__respository_status = tk.Label(
+            self.__master,
+            image=self.__picture_warning
+        )
+        self.__respository_status.grid(row=1, column=0)
+        self.__repository_label = tk.Label(self.__master, text="Please select a feature file repository.", wraplength="250")
+        self.__repository_label.grid(row=1, column=1)
+        self.__repository_select_button = tk.Button(self.__master,
+                                                    text="Select repository",
+                                                    command=self.__select_repository)
+        self.__repository_select_button.grid(row=1, column=3)
+        # Document name
+        self.__document_name_label.grid(row=2, column=0)
+        # Document filename
+        self.__document_filename_label.grid(row=3, column=0)
+        # US Tag
+        self.__us_tag_label.grid(row=4, column=0)
+        # Execution location
+        self.__execution_result_label.grid(row=5, column=0)
+        # Readme
+        self.__readme_button = tk.Button(self.__master, text="README",
+                                         command=self.__display_readme)
+        self.__readme_button.grid(row=6, column=0)
+        # Execute
+        self.__execute_button = tk.Button(self.__master, text="Create report",
+                                          command=self.__create_report)
+        self.__execute_button.grid(row=6, column=3)
+        # QUIT
+        self.__quit = tk.Button(self.__master, text="QUIT", fg="red",
+                              command=self.__master.destroy)
+        self.__quit.grid(row=7, column=1, columnspan=3)
+
+    def __display_readme(self):
+        print("Display readme")
+
+    def __create_report(self):
+        print("Create report")
+
+    def __display_legal(self, event):
+        print("Display legal")
+        fInfos = Toplevel()  # Popup -> Toplevel()
+        fInfos.title('Infos')
+        text = tk.Text(fInfos, height=14, width=90)
+        text.insert(tk.END,
+                    """License
+*******
+
+ExportUtilities  Copyright (C) 2021  E.Aivayan
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it under certain conditions.
+
+Please see https://opensource.org/licenses/GPL-3.0
+
+Pictures disclaimer
+*******************
+ 
+Icon by Raj Dev (https://freeicons.io/profile/714) on https://freeicons.io""")
+        text.grid(row=0, column=0)
+        tk.Button(fInfos, text='Quitter', command=fInfos.destroy).grid(row=1, column=0)
+        fInfos.transient(self.__master)  # Réduction popup impossible
+        fInfos.grab_set()  # Interaction avec fenetre jeu impossible
+        self.__master.wait_window(fInfos)  # Arrêt script principal
+
+    def __select_repository(self):
+        self.__repository_location = filedialog.askdirectory(parent=self.__master, mustexist=True, title="Select the feature repository")
+        self.__repository_label["text"] = self.__repository_location
+        self.__respository_status["image"] = self.__picture_valid
+        # self.__respository_status.configure(image=self.__picture_valid)
+        # self.__respository_status.image = self.__picture_valid
+
+
+    def run(self):
+        self.__master.mainloop()
+
 
 
 class ExportUtilities:
@@ -224,8 +345,8 @@ class ExportUtilities:
         current_feature = None
         current_scenario = None
         last_status = "skipped"
-        with open(file) as report:
-            for line in report.readlines():
+        with open(file) as report_file:
+            for line in report_file.readlines():
                 if re.match("Feature.*", line):
                     if current_feature is not None:
                         reporter[current_feature].update({current_scenario: last_status})
@@ -285,15 +406,42 @@ class ExportUtilities:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tag")
-    parser.add_argument("--title")
-    parser.add_argument("--repository")
-    parser.add_argument("--output")
-    parser.add_argument("--execution")
+    parser.add_argument("--tag", help="Invariant pointing to a user story")
+    parser.add_argument("--title", help="The document's title")
+    parser.add_argument("--repository", help="The folder where the feature files are")
+    parser.add_argument("--output", help="")
+    parser.add_argument("--execution",
+                        help="Behave plain test output in order to also print the last execution result")
+    parser.add_argument("--license",
+                        help="Display the license.",
+                        action="store_true")
 
     args = parser.parse_args()
-
-    if all([item is None for item in vars(args).values()]):
-        print("all none")
+    if all([value is None for item, value in vars(args).items() if item != "license"]):
+        app = Application()
+        app.run()
     else:
-        print("some not none")
+        if args.license is not None and args.license:
+            with open(os.path.realpath(f"{os.path.dirname(os.path.realpath(__file__))}/../LICENSE.txt")) as license:
+                print(license.read())
+                sys.exit(0)
+        if args.repository is None or not args.repository:
+            parser.print_help()
+        report = ExportUtilities()
+        report.feature_repository = args.repository
+        if args.title is not None and args.title:
+            report.report_title = args.title
+        if args.tag is not None and args.tag:
+            report.us_tag = args.tag
+        parameters = dict()
+        if args.execution is not None and args.execution:
+            parameters["report_file"] = args.execution
+        if args.output is not None and args.output:
+            parameters["output_file_name"] = args.output
+        print(""" ExportUtilities  Copyright (C) 2021  E.Aivayan
+    This program comes with ABSOLUTELY NO WARRANTY.
+    This is free software, and you are welcome to redistribute it
+    under certain conditions.
+    Run with --license option to display the full licence""")
+        report.create_application_documentation(**parameters)
+    sys.exit(0)

@@ -7,7 +7,7 @@ with open("README.md", "r") as file:
 setup(
     name="eaiscenarioreporter",
     version="0.0.1",
-    description="UI utilities in order to abstract selenium commands",
+    description="Turns folder of gherkin feature files into a docx file.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[  # Optional
@@ -27,15 +27,21 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3.8',
+        'Topic :: Software Development :: Quality Assurance',
+        'Topic :: Text Processing'
+
     ],
     install_requires=[
         'behave',
-        'python-docx'
+        'python-docx',
+        'Pillow'
     ],
     python_requires='>=3.7, !=2.*',
     # packages=find_packages(),
     # include_package_data=True,
+    py_modules=["featurereporter"],
     package_dir={'': 'src'},
     author="Eric Aïvayan",
-    author_email="eric.aivayan@free.fr"
+    author_email="eric.aivayan@free.fr",
+    url="https://github.com/Hidden-goblin/eaitoolbox/tree/master/eaireporter"
 )
