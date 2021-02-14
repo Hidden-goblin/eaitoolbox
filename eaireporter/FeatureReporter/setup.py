@@ -43,5 +43,5 @@ setup(
     package_dir={'': 'src'},
     author="Eric Aïvayan",
     author_email="eric.aivayan@free.fr",
-    url="https://github.com/Hidden-goblin/eaitoolbox/tree/master/eaireporter"
+    url="https://github.com/Hidden-goblin/eaitoolbox/tree/master/eaireporter/FeatureReporter"
 )
