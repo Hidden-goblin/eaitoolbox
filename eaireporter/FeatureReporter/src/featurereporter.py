@@ -22,77 +22,110 @@ class Application:
         self.__assets = os.path.realpath(f"{os.path.dirname(os.path.realpath(__file__))}/..")
         self.__master = tk.Tk()
         self.__master.geometry("500x200")
+        # Feature repository vars
         self.__repository_label = None
-        self.__repository_label_text = "None Selected"
         self.__repository_select_button = None
         self.__repository_location = None
-        valid = Image.open(f"{self.__assets}/assets/valid.png")
-        valid = valid.resize((20,20), Image.ANTIALIAS)
-        self.__picture_valid = ImageTk.PhotoImage(valid)
-        warning = Image.open(f"{self.__assets}/assets/warning.png")
-        warning = warning.resize((20,20), Image.ANTIALIAS)
-        self.__picture_warning = ImageTk.PhotoImage(warning)
-        self.__document_name_label = tk.Label(self.__master,
-                                              text="Document name: ")
-        self.__document_filename_label = tk.Label(self.__master,
-                                                 text="Document filname: ")
-        self.__us_tag_label = tk.Label(self.__master,
-                                       text="US Tag: ")
-        self.__execution_result_label = tk.Label(self.__master,
-                                                 text="Execution results location: ")
+        self.__respository_status = None
+        self.__picture_valid = None
+        self.__picture_warning = None
+        # Created document
+        self.__document_name_label = None
+        self.__document_name_input = None
+        self.__document_filename_label = None
+        self.__document_filename_input = None
+        self.__us_tag_label = None
+        self.__us_tag_input = None
+        # Execution reference
+        self.__execution_result_label = None
+        self.__execution_result_button = None
+        # Other UI thing
         self.__quit = None
         self.__readme_button = None
         self.__execute_button = None
+        self.__legal_label = None
+        # Reporter object
         self.__reporter = ExportUtilities()
+        # Create
         self.create_widgets()
-
-        # Icon by <a href="https://freeicons.io/profile/714">Raj Dev</a> on <a href="https://freeicons.io">freeicons.io</a>
+        self.create_layout()
 
 
 
     def create_widgets(self):
         # Legal stuff
         self.__legal_label = tk.Label(self.__master, text="?", )
-        self.__legal_label.grid(row=0, column=3)
         self.__legal_label.bind("<Button-1>", self.__display_legal)
+        # Picture stuff
+        valid = Image.open(f"{self.__assets}/assets/valid.png")
+        valid = valid.resize((20, 20), Image.ANTIALIAS)
+        self.__picture_valid = ImageTk.PhotoImage(valid)
+        warning = Image.open(f"{self.__assets}/assets/warning.png")
+        warning = warning.resize((20, 20), Image.ANTIALIAS)
+        self.__picture_warning = ImageTk.PhotoImage(warning)
         # Repository
-        self.__respository_status = tk.Label(
-            self.__master,
-            image=self.__picture_warning
-        )
-        self.__respository_status.grid(row=1, column=0)
-        self.__repository_label = tk.Label(self.__master, text="Please select a feature file repository.", wraplength="250")
-        self.__repository_label.grid(row=1, column=1)
+        self.__respository_status = tk.Label(self.__master, image=self.__picture_warning)
+        self.__repository_label = tk.Label(self.__master,
+                                           text="Please select a feature file repository.",
+                                           wraplength="250")
         self.__repository_select_button = tk.Button(self.__master,
                                                     text="Select repository",
                                                     command=self.__select_repository)
-        self.__repository_select_button.grid(row=1, column=3)
         # Document name
-        self.__document_name_label.grid(row=2, column=0)
+        self.__document_name_label = tk.Label(self.__master,
+                                              text="Document name: ")
+        self.__document_name_input = tk.Entry(self.__master)
         # Document filename
-        self.__document_filename_label.grid(row=3, column=0)
+        self.__document_filename_label = tk.Label(self.__master,
+                                                  text="Document filname: ")
+        self.__document_filename_input = tk.Entry(self.__master)
         # US Tag
-        self.__us_tag_label.grid(row=4, column=0)
+        self.__us_tag_label = tk.Label(self.__master,
+                                       text="US Tag: ")
+        self.__us_tag_input = tk.Entry(self.__master)
         # Execution location
-        self.__execution_result_label.grid(row=5, column=0)
+        self.__execution_result_label = tk.Label(self.__master,
+                                                 text="Execution results location: ")
+        self.__execution_result_button = tk.Button(self.__master, text="Select execution",
+                                                   command=self.__select_execution)
+        self.__execution_result_reset = tk.Button(self.__master, text="Reset location",
+                                                  command=self.__reset_execution)
         # Readme
         self.__readme_button = tk.Button(self.__master, text="README",
                                          command=self.__display_readme)
-        self.__readme_button.grid(row=6, column=0)
+
         # Execute
         self.__execute_button = tk.Button(self.__master, text="Create report",
                                           command=self.__create_report)
-        self.__execute_button.grid(row=6, column=3)
+
         # QUIT
         self.__quit = tk.Button(self.__master, text="QUIT", fg="red",
                               command=self.__master.destroy)
-        self.__quit.grid(row=7, column=1, columnspan=3)
+
+    def create_layout(self):
+        self.__legal_label.grid(row=0, column=4)
+        self.__respository_status.grid(row=1, column=0)
+        self.__repository_label.grid(row=1, column=1)
+        self.__repository_select_button.grid(row=1, column=3, columnspan=4)
+        self.__document_name_label.grid(row=2, column=0)
+        self.__document_name_input.grid(row=2, column=1)
+        self.__document_filename_label.grid(row=3, column=0)
+        self.__document_filename_input.grid(row=3, column=1)
+        self.__us_tag_label.grid(row=4, column=0)
+        self.__us_tag_input.grid(row=4, column=1)
+        self.__execution_result_label.grid(row=5, column=0)
+        self.__execution_result_button.grid(row=5, column=3)
+        self.__execution_result_reset.grid(row=5, column=4)
+        self.__readme_button.grid(row=6, column=0)
+        self.__execute_button.grid(row=6, column=3)
+        self.__quit.grid(row=7, column=0, columnspan=5, sticky="E,W")
 
     def __display_readme(self):
         print("Display readme")
 
     def __create_report(self):
         print("Create report")
+        print(f"tag {self.__us_tag_input.get()}")
 
     def __display_legal(self, event):
         print("Display legal")
@@ -126,6 +159,11 @@ Icon by Raj Dev (https://freeicons.io/profile/714) on https://freeicons.io""")
         # self.__respository_status.configure(image=self.__picture_valid)
         # self.__respository_status.image = self.__picture_valid
 
+    def __select_execution(self):
+        print("Select execution")
+
+    def __reset_execution(self):
+        print("Reset execution")
 
     def run(self):
         self.__master.mainloop()
