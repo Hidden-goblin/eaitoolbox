@@ -12,7 +12,7 @@ pip install eaiscenarioreporter
 ### From a python shell
 
 ```python
-from featurereporter import ExportUtilities
+from featurereporter.featurereporter import ExportUtilities
 
 my_export = ExportUtilities()
 

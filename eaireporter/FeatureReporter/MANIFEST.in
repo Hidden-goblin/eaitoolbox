@@ -1,2 +1,2 @@
 include LICENSE.txt
-include assets/*
+include src/featurereporter/assets/*

@@ -12,14 +12,20 @@ from PIL import ImageTk, Image
 from behave.parser import parse_file
 from docx import Document
 import tkinter as tk
-from tkinter import filedialog, Toplevel
+from tkinter import filedialog, Toplevel, messagebox
 
 log = logging.getLogger(__name__)
 
+LICENCE = """ ExportUtilities  Copyright (C) 2021  E.Aivayan
+    This program comes with ABSOLUTELY NO WARRANTY.
+    This is free software, and you are welcome to redistribute it under certain conditions.
+    
+    Please see https://opensource.org/licenses/GPL-3.0
+    """
 
 class Application:
     def __init__(self):
-        self.__assets = os.path.realpath(f"{os.path.dirname(os.path.realpath(__file__))}/..")
+        self.__assets = os.path.dirname(os.path.realpath(__file__))
         self.__master = tk.Tk()
         self.__master.geometry("500x200")
         # Feature repository vars
@@ -38,7 +44,9 @@ class Application:
         self.__us_tag_input = None
         # Execution reference
         self.__execution_result_label = None
+        self.__execution_result_status = None
         self.__execution_result_button = None
+        self.__excution_location = None
         # Other UI thing
         self.__quit = None
         self.__readme_button = None
@@ -90,6 +98,7 @@ class Application:
                                                    command=self.__select_execution)
         self.__execution_result_reset = tk.Button(self.__master, text="Reset location",
                                                   command=self.__reset_execution)
+        self.__execution_result_status = tk.Label(self.__master, text="")
         # Readme
         self.__readme_button = tk.Button(self.__master, text="README",
                                          command=self.__display_readme)
@@ -114,6 +123,7 @@ class Application:
         self.__us_tag_label.grid(row=4, column=0)
         self.__us_tag_input.grid(row=4, column=1)
         self.__execution_result_label.grid(row=5, column=0)
+        self.__execution_result_status.grid(row=5, column=1)
         self.__execution_result_button.grid(row=5, column=3)
         self.__execution_result_reset.grid(row=5, column=4)
         self.__readme_button.grid(row=6, column=0)
@@ -121,26 +131,41 @@ class Application:
         self.__quit.grid(row=7, column=0, columnspan=5, sticky="E,W")
 
     def __display_readme(self):
-        print("Display readme")
+        messagebox.showinfo("Quick manual",
+                            """1- Select the folder where you store the feature files
+ Optionaly:
+     2- Select the report title
+     3- Select the report file name
+     4- Select the tag linking to US
+     5- Select the behave plain report file""")
 
     def __create_report(self):
-        print("Create report")
-        print(f"tag {self.__us_tag_input.get()}")
+        if self.__repository_location is not None and self.__repository_location:
+            self.__reporter.feature_repository = self.__repository_location
+            if self.__document_name_input.get():
+                self.__reporter.report_title = self.__document_name_input.get()
+            if self.__us_tag_input.get():
+                self.__reporter.us_tag = self.__us_tag_input.get()
+            param = dict()
+            if self.__document_filename_input.get():
+                param["output_file_name"] = self.__document_filename_input.get()
+            if self.__excution_location is not None and self.__excution_location:
+                param["report_file"] = self.__excution_location
+            print(param)
+            self.__reporter.create_application_documentation(**param)
+        else:
+            messagebox.showerror("Report creation", "Cannot create de report without a feature files repository.\n Please select one.")
 
     def __display_legal(self, event):
         print("Display legal")
         fInfos = Toplevel()  # Popup -> Toplevel()
         fInfos.title('Infos')
-        text = tk.Text(fInfos, height=14, width=90)
+        text = tk.Text(fInfos, height=15, width=90)
         text.insert(tk.END,
-                    """License
+                    f"""License
 *******
 
-ExportUtilities  Copyright (C) 2021  E.Aivayan
-This program comes with ABSOLUTELY NO WARRANTY.
-This is free software, and you are welcome to redistribute it under certain conditions.
-
-Please see https://opensource.org/licenses/GPL-3.0
+{LICENCE}
 
 Pictures disclaimer
 *******************
@@ -154,16 +179,27 @@ Icon by Raj Dev (https://freeicons.io/profile/714) on https://freeicons.io""")
 
     def __select_repository(self):
         self.__repository_location = filedialog.askdirectory(parent=self.__master, mustexist=True, title="Select the feature repository")
-        self.__repository_label["text"] = self.__repository_location
-        self.__respository_status["image"] = self.__picture_valid
+        if self.__repository_location is not None and self.__repository_location:
+            self.__repository_label["text"] = self.__repository_location
+            self.__respository_status["image"] = self.__picture_valid
+        else:
+            self.__repository_label["text"] = "Please select a feature file repository."
+            self.__respository_status["image"] = self.__picture_warning
         # self.__respository_status.configure(image=self.__picture_valid)
         # self.__respository_status.image = self.__picture_valid
 
     def __select_execution(self):
-        print("Select execution")
+        self.__excution_location = filedialog.askopenfilename(parent=self.__master,
+                                                              title="Select the test plain report",
+                                                              filetypes=[ ("text files", "*.txt") ])
+        if self.__excution_location is not None and self.__excution_location:
+            self.__execution_result_status["text"] = "Execution selected"
+        else:
+            self.__execution_result_status["text"] = ""
 
     def __reset_execution(self):
-        print("Reset execution")
+        self.__execution_result_status["text"] = ""
+        self.__excution_location = None
 
     def run(self):
         self.__master.mainloop()
@@ -442,7 +478,7 @@ class ExportUtilities:
                 row_cells[2].text = reporter[feature_key][scenario_key]
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--tag", help="Invariant pointing to a user story")
     parser.add_argument("--title", help="The document's title")
@@ -455,12 +491,13 @@ if __name__ == '__main__':
                         action="store_true")
 
     args = parser.parse_args()
-    if all([value is None for item, value in vars(args).items() if item != "license"]):
+    if all([value is None for item, value in vars(args).items() if item != "license"]) and not args.license:
         app = Application()
         app.run()
     else:
+        print(args.license)
         if args.license is not None and args.license:
-            with open(os.path.realpath(f"{os.path.dirname(os.path.realpath(__file__))}/../LICENSE.txt")) as license:
+            with open(os.path.realpath(f"{os.path.dirname(os.path.realpath(__file__))}/assets/LICENSE.txt")) as license:
                 print(license.read())
                 sys.exit(0)
         if args.repository is None or not args.repository:
@@ -476,10 +513,10 @@ if __name__ == '__main__':
             parameters["report_file"] = args.execution
         if args.output is not None and args.output:
             parameters["output_file_name"] = args.output
-        print(""" ExportUtilities  Copyright (C) 2021  E.Aivayan
-    This program comes with ABSOLUTELY NO WARRANTY.
-    This is free software, and you are welcome to redistribute it
-    under certain conditions.
+        print(f"""{LICENCE}
     Run with --license option to display the full licence""")
         report.create_application_documentation(**parameters)
     sys.exit(0)
+
+if __name__ == '__main__':
+    main()
