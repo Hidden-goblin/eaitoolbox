@@ -12,102 +12,160 @@ from PIL import ImageTk, Image
 from behave.parser import parse_file
 from docx import Document
 import tkinter as tk
-from tkinter import filedialog, Toplevel
+from tkinter import filedialog, Toplevel, messagebox
 
 log = logging.getLogger(__name__)
 
+LICENCE = """ ExportUtilities  Copyright (C) 2021  E.Aivayan
+    This program comes with ABSOLUTELY NO WARRANTY.
+    This is free software, and you are welcome to redistribute it under certain conditions.
+    
+    Please see https://opensource.org/licenses/GPL-3.0
+    """
 
 class Application:
     def __init__(self):
-        self.__assets = os.path.realpath(f"{os.path.dirname(os.path.realpath(__file__))}/..")
+        self.__assets = os.path.dirname(os.path.realpath(__file__))
         self.__master = tk.Tk()
         self.__master.geometry("500x200")
+        # Feature repository vars
         self.__repository_label = None
-        self.__repository_label_text = "None Selected"
         self.__repository_select_button = None
         self.__repository_location = None
-        valid = Image.open(f"{self.__assets}/assets/valid.png")
-        valid = valid.resize((20,20), Image.ANTIALIAS)
-        self.__picture_valid = ImageTk.PhotoImage(valid)
-        warning = Image.open(f"{self.__assets}/assets/warning.png")
-        warning = warning.resize((20,20), Image.ANTIALIAS)
-        self.__picture_warning = ImageTk.PhotoImage(warning)
-        self.__document_name_label = tk.Label(self.__master,
-                                              text="Document name: ")
-        self.__document_filename_label = tk.Label(self.__master,
-                                                 text="Document filname: ")
-        self.__us_tag_label = tk.Label(self.__master,
-                                       text="US Tag: ")
-        self.__execution_result_label = tk.Label(self.__master,
-                                                 text="Execution results location: ")
+        self.__respository_status = None
+        self.__picture_valid = None
+        self.__picture_warning = None
+        # Created document
+        self.__document_name_label = None
+        self.__document_name_input = None
+        self.__document_filename_label = None
+        self.__document_filename_input = None
+        self.__us_tag_label = None
+        self.__us_tag_input = None
+        # Execution reference
+        self.__execution_result_label = None
+        self.__execution_result_status = None
+        self.__execution_result_button = None
+        self.__excution_location = None
+        # Other UI thing
         self.__quit = None
         self.__readme_button = None
         self.__execute_button = None
+        self.__legal_label = None
+        # Reporter object
         self.__reporter = ExportUtilities()
+        # Create
         self.create_widgets()
-
-        # Icon by <a href="https://freeicons.io/profile/714">Raj Dev</a> on <a href="https://freeicons.io">freeicons.io</a>
+        self.create_layout()
 
 
 
     def create_widgets(self):
         # Legal stuff
         self.__legal_label = tk.Label(self.__master, text="?", )
-        self.__legal_label.grid(row=0, column=3)
         self.__legal_label.bind("<Button-1>", self.__display_legal)
+        # Picture stuff
+        valid = Image.open(f"{self.__assets}/assets/valid.png")
+        valid = valid.resize((20, 20), Image.ANTIALIAS)
+        self.__picture_valid = ImageTk.PhotoImage(valid)
+        warning = Image.open(f"{self.__assets}/assets/warning.png")
+        warning = warning.resize((20, 20), Image.ANTIALIAS)
+        self.__picture_warning = ImageTk.PhotoImage(warning)
         # Repository
-        self.__respository_status = tk.Label(
-            self.__master,
-            image=self.__picture_warning
-        )
-        self.__respository_status.grid(row=1, column=0)
-        self.__repository_label = tk.Label(self.__master, text="Please select a feature file repository.", wraplength="250")
-        self.__repository_label.grid(row=1, column=1)
+        self.__respository_status = tk.Label(self.__master, image=self.__picture_warning)
+        self.__repository_label = tk.Label(self.__master,
+                                           text="Please select a feature file repository.",
+                                           wraplength="250")
         self.__repository_select_button = tk.Button(self.__master,
                                                     text="Select repository",
                                                     command=self.__select_repository)
-        self.__repository_select_button.grid(row=1, column=3)
         # Document name
-        self.__document_name_label.grid(row=2, column=0)
+        self.__document_name_label = tk.Label(self.__master,
+                                              text="Document name: ")
+        self.__document_name_input = tk.Entry(self.__master)
         # Document filename
-        self.__document_filename_label.grid(row=3, column=0)
+        self.__document_filename_label = tk.Label(self.__master,
+                                                  text="Document filname: ")
+        self.__document_filename_input = tk.Entry(self.__master)
         # US Tag
-        self.__us_tag_label.grid(row=4, column=0)
+        self.__us_tag_label = tk.Label(self.__master,
+                                       text="US Tag: ")
+        self.__us_tag_input = tk.Entry(self.__master)
         # Execution location
-        self.__execution_result_label.grid(row=5, column=0)
+        self.__execution_result_label = tk.Label(self.__master,
+                                                 text="Execution results location: ")
+        self.__execution_result_button = tk.Button(self.__master, text="Select execution",
+                                                   command=self.__select_execution)
+        self.__execution_result_reset = tk.Button(self.__master, text="Reset location",
+                                                  command=self.__reset_execution)
+        self.__execution_result_status = tk.Label(self.__master, text="")
         # Readme
         self.__readme_button = tk.Button(self.__master, text="README",
                                          command=self.__display_readme)
-        self.__readme_button.grid(row=6, column=0)
+
         # Execute
         self.__execute_button = tk.Button(self.__master, text="Create report",
                                           command=self.__create_report)
-        self.__execute_button.grid(row=6, column=3)
+
         # QUIT
         self.__quit = tk.Button(self.__master, text="QUIT", fg="red",
                               command=self.__master.destroy)
-        self.__quit.grid(row=7, column=1, columnspan=3)
+
+    def create_layout(self):
+        self.__legal_label.grid(row=0, column=4)
+        self.__respository_status.grid(row=1, column=0)
+        self.__repository_label.grid(row=1, column=1)
+        self.__repository_select_button.grid(row=1, column=3, columnspan=4)
+        self.__document_name_label.grid(row=2, column=0)
+        self.__document_name_input.grid(row=2, column=1)
+        self.__document_filename_label.grid(row=3, column=0)
+        self.__document_filename_input.grid(row=3, column=1)
+        self.__us_tag_label.grid(row=4, column=0)
+        self.__us_tag_input.grid(row=4, column=1)
+        self.__execution_result_label.grid(row=5, column=0)
+        self.__execution_result_status.grid(row=5, column=1)
+        self.__execution_result_button.grid(row=5, column=3)
+        self.__execution_result_reset.grid(row=5, column=4)
+        self.__readme_button.grid(row=6, column=0)
+        self.__execute_button.grid(row=6, column=3)
+        self.__quit.grid(row=7, column=0, columnspan=5, sticky="E,W")
 
     def __display_readme(self):
-        print("Display readme")
+        messagebox.showinfo("Quick manual",
+                            """1- Select the folder where you store the feature files
+ Optionaly:
+     2- Select the report title
+     3- Select the report file name
+     4- Select the tag linking to US
+     5- Select the behave plain report file""")
 
     def __create_report(self):
-        print("Create report")
+        if self.__repository_location is not None and self.__repository_location:
+            self.__reporter.feature_repository = self.__repository_location
+            if self.__document_name_input.get():
+                self.__reporter.report_title = self.__document_name_input.get()
+            if self.__us_tag_input.get():
+                self.__reporter.us_tag = self.__us_tag_input.get()
+            param = dict()
+            if self.__document_filename_input.get():
+                param["output_file_name"] = self.__document_filename_input.get()
+            if self.__excution_location is not None and self.__excution_location:
+                param["report_file"] = self.__excution_location
+            print(param)
+            self.__reporter.create_application_documentation(**param)
+        else:
+            messagebox.showerror("Report creation", "Cannot create de report without a feature files repository.\n Please select one.")
 
     def __display_legal(self, event):
         print("Display legal")
         fInfos = Toplevel()  # Popup -> Toplevel()
         fInfos.title('Infos')
-        text = tk.Text(fInfos, height=14, width=90)
+        text = tk.Text(fInfos, height=15, width=90)
         text.insert(tk.END,
-                    """License
+                    f"""License
 *******
 
-ExportUtilities  Copyright (C) 2021  E.Aivayan
-This program comes with ABSOLUTELY NO WARRANTY.
-This is free software, and you are welcome to redistribute it under certain conditions.
-
-Please see https://opensource.org/licenses/GPL-3.0
+{LICENCE}
 
 Pictures disclaimer
 *******************
@@ -121,11 +179,27 @@ Icon by Raj Dev (https://freeicons.io/profile/714) on https://freeicons.io""")
 
     def __select_repository(self):
         self.__repository_location = filedialog.askdirectory(parent=self.__master, mustexist=True, title="Select the feature repository")
-        self.__repository_label["text"] = self.__repository_location
-        self.__respository_status["image"] = self.__picture_valid
+        if self.__repository_location is not None and self.__repository_location:
+            self.__repository_label["text"] = self.__repository_location
+            self.__respository_status["image"] = self.__picture_valid
+        else:
+            self.__repository_label["text"] = "Please select a feature file repository."
+            self.__respository_status["image"] = self.__picture_warning
         # self.__respository_status.configure(image=self.__picture_valid)
         # self.__respository_status.image = self.__picture_valid
 
+    def __select_execution(self):
+        self.__excution_location = filedialog.askopenfilename(parent=self.__master,
+                                                              title="Select the test plain report",
+                                                              filetypes=[ ("text files", "*.txt") ])
+        if self.__excution_location is not None and self.__excution_location:
+            self.__execution_result_status["text"] = "Execution selected"
+        else:
+            self.__execution_result_status["text"] = ""
+
+    def __reset_execution(self):
+        self.__execution_result_status["text"] = ""
+        self.__excution_location = None
 
     def run(self):
         self.__master.mainloop()
@@ -404,7 +478,7 @@ class ExportUtilities:
                 row_cells[2].text = reporter[feature_key][scenario_key]
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--tag", help="Invariant pointing to a user story")
     parser.add_argument("--title", help="The document's title")
@@ -417,12 +491,13 @@ if __name__ == '__main__':
                         action="store_true")
 
     args = parser.parse_args()
-    if all([value is None for item, value in vars(args).items() if item != "license"]):
+    if all([value is None for item, value in vars(args).items() if item != "license"]) and not args.license:
         app = Application()
         app.run()
     else:
+        print(args.license)
         if args.license is not None and args.license:
-            with open(os.path.realpath(f"{os.path.dirname(os.path.realpath(__file__))}/../LICENSE.txt")) as license:
+            with open(os.path.realpath(f"{os.path.dirname(os.path.realpath(__file__))}/assets/LICENSE.txt")) as license:
                 print(license.read())
                 sys.exit(0)
         if args.repository is None or not args.repository:
@@ -438,10 +513,10 @@ if __name__ == '__main__':
             parameters["report_file"] = args.execution
         if args.output is not None and args.output:
             parameters["output_file_name"] = args.output
-        print(""" ExportUtilities  Copyright (C) 2021  E.Aivayan
-    This program comes with ABSOLUTELY NO WARRANTY.
-    This is free software, and you are welcome to redistribute it
-    under certain conditions.
+        print(f"""{LICENCE}
     Run with --license option to display the full licence""")
         report.create_application_documentation(**parameters)
     sys.exit(0)
+
+if __name__ == '__main__':
+    main()

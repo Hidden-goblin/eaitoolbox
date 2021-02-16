@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open("README.md", "r") as file:
     long_description = file.read()
 
 setup(
     name="eaiscenarioreporter",
-    version="0.0.1",
+    version="0.0.6",
     description="Turns folder of gherkin feature files into a docx file.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -37,11 +37,15 @@ setup(
         'Pillow'
     ],
     python_requires='>=3.7, !=2.*',
-    # packages=find_packages(),
-    # include_package_data=True,
+    packages=find_packages(),
+    include_package_data=True,
     py_modules=["featurereporter"],
-    package_dir={'': 'src'},
+    # packages=['featurereporter'],
+    package_dir={'featurereporter': 'src/featurereporter'},
+    package_data={'featurereporter': ['featurereporter/assets/*.png', 'featurereporter/assets/*.txt']},
     author="Eric Aïvayan",
     author_email="eric.aivayan@free.fr",
-    url="https://github.com/Hidden-goblin/eaitoolbox/tree/master/eaireporter"
+    url="https://github.com/Hidden-goblin/eaitoolbox/tree/master/eaireporter/FeatureReporter",
+    data_files=[('assets', ['src/featurereporter/assets/valid.png', 'src/featurereporter/assets/warning.png'])],
+    entry_points={"console_scripts": ["featurereporter=featurereporter.featurereporter:main"]}
 )
