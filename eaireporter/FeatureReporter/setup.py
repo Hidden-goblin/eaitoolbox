@@ -6,7 +6,7 @@ with open("README.md", "r") as file:
 
 setup(
     name="eaiscenarioreporter",
-    version="0.0.6",
+    version="0.0.10",
     description="Turns folder of gherkin feature files into a docx file.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -26,6 +26,7 @@ setup(
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Topic :: Software Development :: Quality Assurance',
         'Topic :: Text Processing'
@@ -36,16 +37,17 @@ setup(
         'python-docx',
         'Pillow'
     ],
+    keywords=["BDD", "Gherkin", "behave", "docx"],
     python_requires='>=3.7, !=2.*',
     packages=find_packages(),
     include_package_data=True,
     py_modules=["featurereporter"],
     # packages=['featurereporter'],
-    package_dir={'featurereporter': 'src/featurereporter'},
-    package_data={'featurereporter': ['featurereporter/assets/*.png', 'featurereporter/assets/*.txt']},
+    package_dir={'featurereporter': 'featurereporter'},
+    package_data={'featurereporter': ['assets/*.png', 'assets/*.txt']},
     author="Eric Aïvayan",
     author_email="eric.aivayan@free.fr",
     url="https://github.com/Hidden-goblin/eaitoolbox/tree/master/eaireporter/FeatureReporter",
-    data_files=[('assets', ['src/featurereporter/assets/valid.png', 'src/featurereporter/assets/warning.png'])],
+    data_files=[('assets', ['featurereporter/assets/valid.png', 'featurereporter/assets/warning.png'])],
     entry_points={"console_scripts": ["featurereporter=featurereporter.featurereporter:main"]}
 )
