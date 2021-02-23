@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 # -*- Product under GNU GPL v3 -*-
+# -*- Author: E.Aivayan -*-
 import re
 import glob
 import logging
 import argparse
 import os
 import sys
+import tempfile
+import tkinter as tk
 
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from PIL import ImageTk, Image
 from behave.parser import parse_file
 from docx import Document
-import tkinter as tk
 from tkinter import filedialog, Toplevel, messagebox
 
 log = logging.getLogger(__name__)
@@ -20,10 +23,12 @@ LICENCE = """ ExportUtilities  Copyright (C) 2021  E.Aivayan
     This program comes with ABSOLUTELY NO WARRANTY.
     This is free software, and you are welcome to redistribute it under certain conditions.
     
-    Please see https://opensource.org/licenses/GPL-3.0
+    Please see https://opensource.org/licenses/lGPL-3.0
     """
 
+
 class Application:
+
     def __init__(self):
         self.__assets = os.path.dirname(os.path.realpath(__file__))
         self.__master = tk.Tk()
@@ -46,6 +51,7 @@ class Application:
         self.__execution_result_label = None
         self.__execution_result_status = None
         self.__execution_result_button = None
+        self.__execution_result_reset = None
         self.__excution_location = None
         # Other UI thing
         self.__quit = None
@@ -57,8 +63,6 @@ class Application:
         # Create
         self.create_widgets()
         self.create_layout()
-
-
 
     def create_widgets(self):
         # Legal stuff
@@ -109,7 +113,7 @@ class Application:
 
         # QUIT
         self.__quit = tk.Button(self.__master, text="QUIT", fg="red",
-                              command=self.__master.destroy)
+                                command=self.__master.destroy)
 
     def create_layout(self):
         self.__legal_label.grid(row=0, column=4)
@@ -130,7 +134,8 @@ class Application:
         self.__execute_button.grid(row=6, column=3)
         self.__quit.grid(row=7, column=0, columnspan=5, sticky="E,W")
 
-    def __display_readme(self):
+    @staticmethod
+    def __display_readme():
         messagebox.showinfo("Quick manual",
                             """1- Select the folder where you store the feature files
  Optionaly:
@@ -140,6 +145,7 @@ class Application:
      5- Select the behave plain report file""")
 
     def __create_report(self):
+        log.info("Start reporting")
         if self.__repository_location is not None and self.__repository_location:
             self.__reporter.feature_repository = self.__repository_location
             if self.__document_name_input.get():
@@ -154,7 +160,9 @@ class Application:
             print(param)
             self.__reporter.create_application_documentation(**param)
         else:
-            messagebox.showerror("Report creation", "Cannot create de report without a feature files repository.\n Please select one.")
+            log.error("Cannot create de report without a feature files repository.")
+            messagebox.showerror("Report creation",
+                                 "Cannot create de report without a feature files repository.\n Please select one.")
 
     def __display_legal(self, event):
         print("Display legal")
@@ -178,7 +186,9 @@ Icon by Raj Dev (https://freeicons.io/profile/714) on https://freeicons.io""")
         self.__master.wait_window(fInfos)  # Arrêt script principal
 
     def __select_repository(self):
-        self.__repository_location = filedialog.askdirectory(parent=self.__master, mustexist=True, title="Select the feature repository")
+        self.__repository_location = filedialog.askdirectory(parent=self.__master,
+                                                             mustexist=True,
+                                                             title="Select the feature repository")
         if self.__repository_location is not None and self.__repository_location:
             self.__repository_label["text"] = self.__repository_location
             self.__respository_status["image"] = self.__picture_valid
@@ -191,7 +201,7 @@ Icon by Raj Dev (https://freeicons.io/profile/714) on https://freeicons.io""")
     def __select_execution(self):
         self.__excution_location = filedialog.askopenfilename(parent=self.__master,
                                                               title="Select the test plain report",
-                                                              filetypes=[ ("text files", "*.txt") ])
+                                                              filetypes=[("text files", "*.txt")])
         if self.__excution_location is not None and self.__excution_location:
             self.__execution_result_status["text"] = "Execution selected"
         else:
@@ -203,7 +213,6 @@ Icon by Raj Dev (https://freeicons.io/profile/714) on https://freeicons.io""")
 
     def run(self):
         self.__master.mainloop()
-
 
 
 class ExportUtilities:
@@ -268,13 +277,14 @@ class ExportUtilities:
         :param output_file_name : The exported file name by default "demo.docx"
         :return: None
         """
-
+        log.info("Start application documentation")
         self.__document = Document()
         self.document.add_heading("{}".format(self.__report_title), 0)  # Document title
         self.document.add_page_break()
         for file in glob.iglob("{}/**/*.feature".format(self.__feature_repository),
                                recursive=True):  # Use the iterator as it's cleaner
             # log.debug()
+            log.info(f"Computing {file}")
             test = parse_file(file)  # Use the Behave parser in order to read the feature file
             self.add_heading(feature=test)
             self.add_description(feature=test)
@@ -285,17 +295,23 @@ class ExportUtilities:
             self.add_report(file=report_file)
         self.document.save(output_file_name)
 
+
     def add_heading(self, feature=None):
         """
         Add a the feature name as top level section
         :param feature: the feature object
         :return:
         """
-        self.document.add_heading(feature.name, 1)
-        paragraph = self.document.add_paragraph("")
-        if self.us_tag is not None:
-            matcher = [elem for elem in feature.tags if self.us_tag in elem]
-            paragraph.add_run("Related to the user story: {}".format(str(matcher).strip('[]')))
+        try:
+            log.info(f"Processing {feature.name}")
+            self.document.add_heading(feature.name, 1)
+            paragraph = self.document.add_paragraph("")
+            if self.us_tag is not None:
+                matcher = [elem for elem in feature.tags if self.us_tag in elem]
+                paragraph.add_run("Related to the user story: {}".format(str(matcher).strip('[]')))
+        except Exception as exception:
+            log.error(exception)
+            raise Exception(exception)
 
     def add_description(self, feature=None):
         """
@@ -306,14 +322,18 @@ class ExportUtilities:
         :param feature: the feature object
         :return: None
         """
-        for line in feature.description:
-            if re.match(r'\*.*', line):
-                self.document.add_paragraph(line[1:], style='List Bullet')
-            elif re.match('[Bb]usiness [Rr]ules.*', line):
-                paragraph = self.document.add_paragraph("")
-                paragraph.add_run(line).bold = True
-            else:
-                self.document.add_paragraph(line)
+        try:
+            for line in feature.description:
+                if re.match(r'\*.*', line):
+                    self.document.add_paragraph(line[1:], style='List Bullet')
+                elif re.match('[Bb]usiness [Rr]ules.*', line):
+                    paragraph = self.document.add_paragraph("")
+                    paragraph.add_run(line).bold = True
+                else:
+                    self.document.add_paragraph(line)
+        except Exception as exception:
+            log.error(exception)
+            raise Exception(exception)
 
     def add_background(self, feature=None):
         """
@@ -321,10 +341,14 @@ class ExportUtilities:
         :param feature: the feature object from where to retrieve the background
         :return: None
         """
-        if feature.background is not None:
-            self.print_scenario_title(scenario_keyword=feature.background.keyword,
-                                      scenario_name=feature.background.name)
-            self.print_steps(steps=feature.background.steps)
+        try:
+            if feature.background is not None:
+                self.print_scenario_title(scenario_keyword=feature.background.keyword,
+                                          scenario_name=feature.background.name)
+                self.print_steps(steps=feature.background.steps)
+        except Exception as exception:
+            log.error(exception)
+            raise Exception(exception)
 
     def add_scenario(self, feature=None):
         """
@@ -332,13 +356,18 @@ class ExportUtilities:
         :param feature: the feature object
         :return: None
         """
-        if feature.scenarios is not None:
-            for scenario in feature.scenarios:
-                self.print_scenario_title(scenario_keyword=scenario.keyword,
-                                          scenario_name=scenario.name)
-                self.print_steps(steps=scenario.steps)
-                if scenario.type == 'scenario_outline':
-                    self.print_examples(examples=scenario.examples)
+        try:
+            if feature.scenarios is not None:
+                for scenario in feature.scenarios:
+                    log.info(f"Processing scenario {scenario.name}")
+                    self.print_scenario_title(scenario_keyword=scenario.keyword,
+                                              scenario_name=scenario.name)
+                    self.print_steps(steps=scenario.steps)
+                    if scenario.type == 'scenario_outline':
+                        self.print_examples(examples=scenario.examples)
+        except Exception as exception:
+            log.error(exception)
+            raise Exception(exception)
 
     def print_examples(self, examples=None):
         """
@@ -346,10 +375,15 @@ class ExportUtilities:
         :param examples: an example list
         :return: None
         """
-        for example in examples:
-            self.print_scenario_title(scenario_keyword=example.keyword,
-                                      scenario_name=example.name, level=3)
-            self.print_table(table=example.table)
+        try:
+            for example in examples:
+                log.info(f"Processing example '{example.name}'")
+                self.print_scenario_title(scenario_keyword=example.keyword,
+                                          scenario_name=example.name, level=3)
+                self.print_table(table=example.table)
+        except Exception as exception:
+            log.error(exception)
+            raise Exception(exception)
 
     def print_scenario_title(self, scenario_keyword=None, scenario_name=None, level=2):
         """
@@ -479,6 +513,21 @@ class ExportUtilities:
 
 
 def main():
+    logging.basicConfig(level=logging.DEBUG)
+    formatter = logging.Formatter(
+        "%(asctime)s -- %(filename)s.%(funcName)s-- %(levelname)s -- %(message)s")
+    handler = RotatingFileHandler(f"{tempfile.gettempdir()}/test_log.log",
+                                  mode="a",
+                                  encoding="utf-8",
+                                  maxBytes=1000000,
+                                  backupCount=2)
+    handler.setFormatter(formatter)
+    handler.setLevel(logging.DEBUG)
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(handler)
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--tag", help="Invariant pointing to a user story")
     parser.add_argument("--title", help="The document's title")
